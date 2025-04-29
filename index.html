@@ -1,142 +1,146 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <title>Wallpaper Dinâmico com Mensagem</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-      width: 100%;
-      font-family: 'Arial', sans-serif;
-      color: white;
-    }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  font-family: Roboto, sans-serif;
+  color: white;
+}
 
-    video#background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      background: black;
-    }
+video#background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  background: black;
+}
 
-    .clock-container {
-      position: absolute;
-      left: 90px;
-      top: 50%;
-      transform: translateY(-50%);
-      padding: 15px 25px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+.clock-container {
+  position: absolute;
+  left: 90px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 15px 25px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 
-      font-family: Roboto, sans-serif;
-      font-weight: 700;
-    }
+  font-weight: 700;
+}
 
-    .day-message {
-      font-size: 50px;
-      margin-bottom: 8px;
-      letter-spacing: 14.5px;
-    }
+.day-message {
+  font-size: 50px;
+  margin-bottom: 8px;
+  letter-spacing: 14.5px;
+}
 
-    .clock {
-      font-size: 90px;
-    }
+.clock {
+  font-size: 90px;
+}
+
   </style>
 </head>
+
 <body>
 
-<video id="background" autoplay muted loop>
-  <source id="videoSource" src="./wallpaper_videos/gtr_red.mp4" type="video/mp4" play="true">
-  Seu navegador não suporta vídeo em HTML5.
-</video>
+  <video id="background" autoplay muted loop>
+    <source id="videoSource" src="~/home/gardzock/Documentos/GardZock/Projetos/Visual Studio/my_wallpaper/wallpaper_videos/toyota.mp4" type="video/mp4">
+  </video>
 
-<div class="clock-container">
-  <div class="day-message" id="dayMessage">TER - Conquiste seus sonhos</div>
-  <div class="clock" id="clock">03:45 PM</div>
-</div>
+  <div class="clock-container">
+    <div class="day-message" id="dayMessage">TER - Conquiste seus sonhos</div>
+    <div class="clock" id="clock">03:45 PM</div>
+  </div>
 
-<script>
-let wallpaperConfig = [];
+  <script>
+    let wallpaperConfig = [];
 
-async function loadConfig() {
-  try {
-    const response = await fetch('config.json');
-    wallpaperConfig = (await response.json()).wallpaper_per_time;
-    wallpaperConfig.sort((a, b) => a.hour - b.hour);
+    async function loadConfig() {
+      try {
+        const response = await fetch('config.json');
+        wallpaperConfig = (await response.json()).wallpaper_per_time;
+        wallpaperConfig.sort((a, b) => a.hour - b.hour);
 
-    updateWallpaper();
-  } catch (error) {
-    console.error("Erro ao carregar config.json:", error);
-  }
-}
-
-function getDayMessage() {
-  const days = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
-  const keywords = ["PAZ", "COMEÇO", "FOCO", "META", "CONSTÂNCIA", "SUCESSO", "DESCANSO"];
-
-  const now = new Date();
-  const dayIndex = now.getDay();
-  return `${days[dayIndex]} - ${keywords[dayIndex]}`;
-}
-
-function updateClock() {
-  const now = new Date();
-  let hours = now.getHours();
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const isPM = hours >= 12;
-
-  // Formato 12h
-  hours = hours % 12;
-  hours = hours ? hours : 12; // 0h vira 12h
-
-  const ampm = isPM ? 'PM' : 'AM';
-  document.getElementById('clock').textContent = `${String(hours).padStart(2, '0')}:${minutes} ${ampm}`;
-
-  // Atualiza também o texto do dia
-  document.getElementById('dayMessage').textContent = getDayMessage();
-}
-
-function updateWallpaper() {
-  if (wallpaperConfig.length === 0) return;
-
-  const now = new Date();
-  const currentHour = now.getHours();
-  let selectedWallpaper = wallpaperConfig[0].wallpaper_path;
-
-  for (let i = 0; i < wallpaperConfig.length; i++) {
-    if (currentHour >= wallpaperConfig[i].hour) {
-      selectedWallpaper = wallpaperConfig[i].wallpaper_path;
+        updateWallpaper();
+      } catch (error) {
+        console.error("Erro ao carregar config.json:", error);
+      }
     }
-  }
 
-  const video = document.getElementById('background');
-  const source = document.getElementById('videoSource');
+    function getDayMessage() {
+      const days = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
+      const keywords = ["PAZ", "COMEÇO", "FOCO", "META", "CONSTÂNCIA", "SUCESSO", "DESCANSO"];
 
-  if (!source.src.includes(selectedWallpaper)) {
-    source.src = selectedWallpaper;
-    video.load();
-    video.play();
-  }
-}
+      const now = new Date();
+      const dayIndex = now.getDay();
+      return `${days[dayIndex]} - ${keywords[dayIndex]}`;
+    }
 
-// Atualiza o relógio a cada segundo
-setInterval(updateClock, 1000);
-updateClock();
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const isPM = hours >= 12;
 
-// Atualiza o wallpaper a cada 5 minutos
-setInterval(updateWallpaper, 5 * 60 * 1000);
+      // Formato 12h
+      hours = hours % 12;
+      hours = hours ? hours : 12; // 0h vira 12h
 
-// Carrega a configuração inicial
-loadConfig();
-</script>
+      const ampm = isPM ? 'PM' : 'AM';
+      document.getElementById('clock').textContent = `${String(hours).padStart(2, '0')}:${minutes} ${ampm}`;
+
+      // Atualiza também o texto do dia
+      document.getElementById('dayMessage').textContent = getDayMessage();
+    }
+
+    function updateWallpaper() {
+      if (wallpaperConfig.length === 0) return;
+
+      const now = new Date();
+      const currentHour = now.getHours();
+      let selectedWallpaper = wallpaperConfig[0].wallpaper_path;
+
+      for (let i = 0; i < wallpaperConfig.length; i++) {
+        if (currentHour >= wallpaperConfig[i].hour) {
+          selectedWallpaper = wallpaperConfig[i].wallpaper_path;
+        }
+      }
+
+      const video = document.getElementById('background');
+      const source = document.getElementById('videoSource');
+      console.log(video.src)
+
+      // if (!source.src.includes(selectedWallpaper)) {
+      //   source.src = selectedWallpaper;
+      //   video.load();
+      //   video.play();
+      // }
+    }
+
+    // Atualiza o relógio a cada segundo
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Atualiza o wallpaper a cada 5 minutos
+    setInterval(updateWallpaper, 5 * 60 * 1000);
+
+    // Carrega a configuração inicial
+    loadConfig();
+  </script>
 
 </body>
+
 </html>
