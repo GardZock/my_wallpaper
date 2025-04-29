@@ -1,0 +1,20 @@
+{
+    "wallpaper_per_time": [
+        {
+            "hour": 8,
+            "wallpaper_path": "./wallpaper_videos/toyota.mp4"
+        },
+        {
+            "hour": 15,
+            "wallpaper_path": "./wallpaper_videos/gtr_red.mp4"
+        },
+        {
+            "hour": 18,
+            "wallpaper_path": "./wallpaper_videos/supra.mp4"
+        },
+        {
+            "hour": 20,
+            "wallpaper_path": "./wallpaper_videos/supra_front.mp4"
+        }
+    ]
+}
