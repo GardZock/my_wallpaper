@@ -54,7 +54,7 @@
 <body>
 
 <video id="background" autoplay muted loop>
-  <source id="videoSource" src="" type="video/webm">
+  <source id="videoSource" src="./wallpaper_videos/gtr_red.mp4" type="video/mp4" play="true">
   Seu navegador não suporta vídeo em HTML5.
 </video>
 
@@ -71,6 +71,7 @@ async function loadConfig() {
     const response = await fetch('config.json');
     wallpaperConfig = (await response.json()).wallpaper_per_time;
     wallpaperConfig.sort((a, b) => a.hour - b.hour);
+
     updateWallpaper();
   } catch (error) {
     console.error("Erro ao carregar config.json:", error);
